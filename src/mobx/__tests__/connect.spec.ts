@@ -114,4 +114,23 @@ describe('MobX inject()', () => {
 		expect(container.innerHTML).to.equal(innerHTML('<span>hello world</span>'));
 	});
 
+  it('stateless components with lifecycle hooks should not throw errors when wrapped', () => {
+
+		function test(domNode) {
+			return 'dummy lifecycle method using ref'
+		}
+
+		function statelessComponent() {
+			return createElement('div', {onComponentDidMount: test});
+		}
+
+		function App() {
+			return createElement(Provider, {
+				testStore: 'hello refs'
+			}, createElement(inject('testStore')(statelessComponent), { testStore: 'refs work!'}))
+		}
+
+		expect(render(App(), container)).not.to.throw(/Inferno Error:/)
+  });
+
 });

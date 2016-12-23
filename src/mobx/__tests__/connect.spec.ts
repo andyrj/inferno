@@ -114,7 +114,7 @@ describe('MobX inject()', () => {
 		expect(container.innerHTML).to.equal(innerHTML('<span>hello world</span>'));
 	});
 
-  it('stateless components with lifecycle hooks should not throw errors when wrapped', () => {
+  it('should not throw error when stateless components with lifecycle hook is wrapped', () => {
 
 		function test(domNode) {
 			return 'dummy lifecycle method using ref'

@@ -2,7 +2,7 @@ import Component from 'inferno-component';
 import createClass from 'inferno-create-class';
 import inject from './inject';
 import makeReactive from './makeReactive';
-import { throwError } from '../shared';
+import { throwError, isNullOrUndef } from '../shared';
 
 /**
  * Wraps a component and provides stores as props
@@ -32,16 +32,22 @@ function connect (arg1: any, arg2 = null): any {
 		&& !componentClass.isReactClass
 		&& !Component.isPrototypeOf(componentClass)
 	) {
+		let innerNode;
 		const newClass = createClass({
 			displayName: componentClass.displayName || componentClass.name,
 			propTypes: componentClass.propTypes,
 			contextTypes: componentClass.contextTypes,
 			getDefaultProps: () => componentClass.defaultProps,
 			render() {
-				return componentClass.call(this, this.props, this.context);
+				innerNode = componentClass.call(this, this.props, this.context);
+				return innerNode;
 			}
 		});
 
+		if (!isNullOrUndef(newClass.ref)) {
+			innerNode.ref = newClass.ref;
+			newClass.ref = null;
+		}
 		return connect(newClass);
 	}
 

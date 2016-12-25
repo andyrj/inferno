@@ -32,22 +32,16 @@ function connect (arg1: any, arg2 = null): any {
 		&& !componentClass.isReactClass
 		&& !Component.isPrototypeOf(componentClass)
 	) {
-		let innerNode;
 		const newClass = createClass({
 			displayName: componentClass.displayName || componentClass.name,
 			propTypes: componentClass.propTypes,
 			contextTypes: componentClass.contextTypes,
 			getDefaultProps: () => componentClass.defaultProps,
 			render() {
-				innerNode = componentClass.call(this, this.props, this.context);
-				return innerNode;
+				return componentClass.call(this, this.props, this.context);
 			}
 		});
 
-		if (!isNullOrUndef(newClass.ref)) {
-			innerNode.ref = newClass.ref;
-			newClass.ref = null;
-		}
 		return connect(newClass);
 	}
 
